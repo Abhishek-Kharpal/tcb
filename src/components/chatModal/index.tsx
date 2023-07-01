@@ -3,6 +3,11 @@ import { Box, Typography, InputBase, IconButton } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ChatBar from '../chatBar';
 import { type Chat } from '../../types';
+import {
+  getAllChats,
+  getChatResponse,
+  setAllChats as saveAllChats,
+} from '~/utils/chatUtils';
 
 interface ChatModalProps {
   chatGroupId: string;
@@ -12,7 +17,7 @@ interface ChatModalProps {
 const ChatModal = ({ chatGroupId, title }: ChatModalProps) => {
   const [chats, setChats] = useState<Chat[]>([]);
 
-  const sendChatHandler = (chatInputValue: string) => {
+  const sendChatHandler = async (chatInputValue: string) => {
     // TODO: send chat, get response, and update chats
     setChats((prevChats) => [
       ...prevChats,
@@ -23,31 +28,32 @@ const ChatModal = ({ chatGroupId, title }: ChatModalProps) => {
         isMe: true,
       },
     ]);
+
+    const response = await getChatResponse(
+      chatInputValue,
+      chatGroupId,
+      console.error,
+    );
+
+    setChats((prevChats) => {
+      const newChats = [
+        ...prevChats,
+        {
+          chatId: String(prevChats.length + 1),
+          chatGroupId: '1',
+          data: response,
+          isMe: false,
+        },
+      ];
+      saveAllChats(chatGroupId, newChats);
+      return newChats;
+    });
   };
 
   useEffect(() => {
-    // Call API to fetch chats of specific chat group
-    setChats([
-      {
-        chatId: '1',
-        chatGroupId: '1',
-        data: 'Message 1',
-        isMe: true,
-      },
-      {
-        chatId: '2',
-        chatGroupId: '1',
-        data: 'Message 2',
-        isMe: false,
-      },
-      {
-        chatId: '3',
-        chatGroupId: '1',
-        data: 'Message 3',
-        isMe: true,
-      },
-    ]);
-  }, []);
+    const chats = getAllChats(chatGroupId);
+    setChats(chats);
+  }, [chatGroupId]);
 
   return (
     // Module to send chats and display previous chats
