@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { Chat } from '../../types';
 
 interface ChatBarProps {
@@ -25,7 +25,7 @@ const ChatBar = ({ chat }: ChatBarProps) => {
           flexGrow: 1,
         }}
       >
-        {chat.data}
+        <Typography variant="body1">{chat.data}</Typography>
       </Box>
     </Box>
   );
