@@ -21,11 +21,8 @@ export const getChatResponse = async (
 
 export const getAllChats = (chatGroupId: string): Chat[] => {
   const allChatsString = getFromStorage(`${chatGroupId}_chats`);
-  const allChats = allChatsString
-    ? (JSON.parse(allChatsString) as Chat[])
-    : null;
-
-  return allChats ?? [];
+  const allChats = allChatsString ? (JSON.parse(allChatsString) as Chat[]) : [];
+  return allChats;
 };
 
 export function setAllChats(chatGroupId: string, chats: Chat[]): void {

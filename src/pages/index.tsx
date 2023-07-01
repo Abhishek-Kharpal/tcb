@@ -10,7 +10,7 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import { ThemeProvider } from '@mui/material/styles';
-import { Chat, type ChatGroup } from '../types';
+import { type ChatGroup } from '../types';
 import ChatData from '../components/chatData';
 import ChatModal from '../components/chatModal';
 import Head from 'next/head';
@@ -57,7 +57,9 @@ export default function Home() {
               selectedChatGroup.title,
             );
 
-            return [...prevChatGroups, selectedChatGroup] as ChatGroup[];
+            setAllChatGroups([...prevChatGroups, selectedChatGroup]);
+
+            return [...prevChatGroups, selectedChatGroup];
           });
 
           setYoutubeDialogOpen(false);
