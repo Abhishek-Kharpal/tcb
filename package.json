@@ -1,5 +1,5 @@
 {
-  "name": "mercor-hack",
+  "name": "tcb",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,6 +13,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/poppins": "^5.0.3",
+    "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.6",
     "@next-auth/prisma-adapter": "^1.0.5",
     "@prisma/client": "^4.14.0",
