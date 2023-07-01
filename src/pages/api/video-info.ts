@@ -1,6 +1,7 @@
 import { type NextApiRequest, type NextApiResponse } from 'next';
-import { YoutubeTranscript } from 'youtube-transcript';
+import ytdl from 'ytdl-core';
 import Joi from 'joi';
+import { CANNOT_GET_VIDEO_INFO } from '~/constants/text';
 
 const ALLOWED_METHODS = ['POST', 'OPTIONS'];
 
@@ -31,14 +32,20 @@ export default async function getYoutubeTranscripts(
   const { youtubeVideoId } = req.body as { youtubeVideoId: string };
 
   try {
-    const transcriptJson = await YoutubeTranscript.fetchTranscript(
-      youtubeVideoId,
-    );
-    const transcript = transcriptJson.map((item) => item.text).join(' ');
-    res.status(200).json({ transcript });
-  } catch (err) {
+    const info = await ytdl.getBasicInfo(youtubeVideoId);
+
+    const title = info.videoDetails.title;
+    const description = info.videoDetails.description;
+    const author = info.videoDetails.author.name;
+
     res.status(200).json({
-      transcript: null,
+      title,
+      description,
+      author,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: CANNOT_GET_VIDEO_INFO,
     });
   }
 }

@@ -18,7 +18,6 @@ const ChatModal = ({ chatGroupId, title }: ChatModalProps) => {
   const [chats, setChats] = useState<Chat[]>([]);
 
   const sendChatHandler = async (chatInputValue: string) => {
-    // TODO: send chat, get response, and update chats
     setChats((prevChats) => [
       ...prevChats,
       {
@@ -105,7 +104,7 @@ const ChatModal = ({ chatGroupId, title }: ChatModalProps) => {
           e.preventDefault();
           const formElement = e.currentTarget as HTMLFormElement;
           const chatInput = formElement.chatInput as HTMLInputElement;
-          sendChatHandler(chatInput.value);
+          void sendChatHandler(chatInput.value);
           chatInput.value = '';
         }}
       >

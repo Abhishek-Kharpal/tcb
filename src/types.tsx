@@ -11,3 +11,9 @@ export interface ChatGroup {
   lastMessage?: string;
   lastMessageTime?: string;
 }
+
+export interface VideoInfo {
+  title: string;
+  description: string;
+  author: string;
+}

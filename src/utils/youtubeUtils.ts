@@ -1,9 +1,11 @@
 import {
+  INFO_FAIL_ERROR_MESSAGE,
   NOT_A_YOUTUBE_VIDEO_ERROR_MESSAGE,
   TRANSCRIPT_FAIL_ERROR_MESSAGE,
   TRANSCRIPT_NOT_FOUND_ERROR_MESSAGE,
 } from '~/constants/text';
 import { SayVidError } from '~/errors';
+import { type VideoInfo } from '~/types';
 
 export function isAYoutubeVideoUrl(youtubeVideoURI: string) {
   return youtubeVideoURI.startsWith('https://www.youtube.com/watch?v=');
@@ -26,26 +28,46 @@ export function getYoutubeVideoId(youtubeVideoURI: string) {
 export async function getTranscriptOfYoutubeVideo(
   youtubeVideoURI: string,
 ): Promise<string> {
-  try {
-    const response = await fetch('/api/transcript', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        youtubeVideoId: getYoutubeVideoId(youtubeVideoURI),
-      }),
-    });
-    const { transcript } = (await response.json()) as {
-      transcript: string | null;
-    };
+  const response = await fetch('/api/transcript', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      youtubeVideoId: getYoutubeVideoId(youtubeVideoURI),
+    }),
+  });
 
-    if (transcript === null) {
-      throw new SayVidError(TRANSCRIPT_NOT_FOUND_ERROR_MESSAGE);
-    }
-    return transcript;
-  } catch (err) {
-    if (err instanceof SayVidError) throw err;
+  if (!response.ok) {
     throw new SayVidError(TRANSCRIPT_FAIL_ERROR_MESSAGE);
   }
+
+  const { transcript } = (await response.json()) as {
+    transcript: string | null;
+  };
+
+  if (transcript === null) {
+    throw new SayVidError(TRANSCRIPT_NOT_FOUND_ERROR_MESSAGE);
+  }
+  return transcript;
+}
+
+export async function getVideoInfo(
+  youtubeVideoURI: string,
+): Promise<VideoInfo> {
+  const response = await fetch('/api/video-info', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      youtubeVideoId: getYoutubeVideoId(youtubeVideoURI),
+    }),
+  });
+
+  if (!response.ok) {
+    throw new SayVidError(INFO_FAIL_ERROR_MESSAGE);
+  }
+
+  return (await response.json()) as VideoInfo;
 }
