@@ -12,7 +12,7 @@ export default async function getYoutubeTranscripts(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  if (!ALLOWED_METHODS.includes(req.method)) {
+  if (![...ALLOWED_METHODS, undefined].includes(req.method)) {
     res.setHeader('Allow', ALLOWED_METHODS);
     res.status(405).end(`Method ${req.method} Not Allowed`);
     return;
@@ -22,7 +22,8 @@ export default async function getYoutubeTranscripts(
     console.log(req.body);
     await bodySchema.validateAsync(req.body);
   } catch (error: any) {
-    res.status(400).json({ message: error.message as string });
+    const { message } = error as { message: string };
+    res.status(400).json({ message });
     return;
   }
 
