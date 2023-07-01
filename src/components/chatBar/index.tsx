@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { Chat } from '../../types';
+import { type Chat } from '../../types';
 
 interface ChatBarProps {
   chat: Chat;
@@ -21,7 +21,7 @@ const ChatBar = ({ chat }: ChatBarProps) => {
           borderRadius: '8px 8px 0px 8px',
           padding: '8px',
           marginTop: '8px',
-          maxWidth: '50%',
+          maxWidth: '80%',
           flexGrow: 1,
         }}
       >

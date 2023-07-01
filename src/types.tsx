@@ -8,6 +8,7 @@ export interface Chat {
 export interface ChatGroup {
   chatGroupId: string;
   title: string;
+  youtubeVideoUrl: string;
   lastMessage?: string;
   lastMessageTime?: string;
 }

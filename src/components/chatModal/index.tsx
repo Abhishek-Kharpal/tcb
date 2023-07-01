@@ -4,6 +4,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ChatBar from '../chatBar';
 import { type Chat } from '../../types';
 import {
+  createInitialChatMessage,
   getAllChats,
   getChatResponse,
   setAllChats as saveAllChats,
@@ -12,21 +13,26 @@ import {
 interface ChatModalProps {
   chatGroupId: string;
   title: string;
+  youtubeVideoUrl: string;
 }
 
-const ChatModal = ({ chatGroupId, title }: ChatModalProps) => {
+const ChatModal = ({ chatGroupId, title, youtubeVideoUrl }: ChatModalProps) => {
   const [chats, setChats] = useState<Chat[]>([]);
 
   const sendChatHandler = async (chatInputValue: string) => {
-    setChats((prevChats) => [
-      ...prevChats,
-      {
-        chatId: String(prevChats.length + 1),
-        chatGroupId: '1',
-        data: chatInputValue,
-        isMe: true,
-      },
-    ]);
+    setChats((prevChats) => {
+      const newChats = [
+        ...prevChats,
+        {
+          chatId: String(prevChats.length + 1),
+          chatGroupId: '1',
+          data: response,
+          isMe: false,
+        },
+      ];
+      saveAllChats(chatGroupId, newChats);
+      return newChats;
+    });
 
     const response = await getChatResponse(
       chatInputValue,
@@ -52,6 +58,13 @@ const ChatModal = ({ chatGroupId, title }: ChatModalProps) => {
   useEffect(() => {
     const chats = getAllChats(chatGroupId);
     setChats(chats);
+    return () => {
+      if (chats.length === 0) {
+        createInitialChatMessage(youtubeVideoUrl)
+          .then(sendChatHandler)
+          .catch(console.error);
+      }
+    };
   }, [chatGroupId]);
 
   return (

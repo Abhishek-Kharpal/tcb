@@ -17,6 +17,7 @@ import Head from 'next/head';
 import theme from '../theme';
 import { getAllChatGroups, setAllChatGroups } from '~/utils/chatGroupUtils';
 import YoutubeLinkDialog from '~/components/YoutubeLinkDialog';
+import { getVideoInfo } from '~/utils/youtubeUtils';
 
 // TODO: Add a loading skeleton for chats
 // TODO: Scrollbars are not that good looking
@@ -43,23 +44,22 @@ export default function Home() {
         onCancel={() => {
           setYoutubeDialogOpen(false);
         }}
-        onSubmit={(url: string) => {
-          // get info and add to chat groups
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        onSubmit={async (url: string) => {
+          const videoInfo = await getVideoInfo(url);
 
           setChatGroups((prevChatGroups) => {
-            const selectedChatGroup = {
+            const newChatGroup = {
               chatGroupId: String(prevChatGroups.length + 1),
-              title: url,
+              youtubeVideoUrl: url,
+              title: videoInfo.title,
             } as ChatGroup;
 
-            handleSelectChat(
-              selectedChatGroup.chatGroupId,
-              selectedChatGroup.title,
-            );
+            handleSelectChat(newChatGroup.chatGroupId, newChatGroup.title);
 
-            setAllChatGroups([...prevChatGroups, selectedChatGroup]);
+            setAllChatGroups([...prevChatGroups, newChatGroup]);
 
-            return [...prevChatGroups, selectedChatGroup];
+            return [...prevChatGroups, newChatGroup];
           });
 
           setYoutubeDialogOpen(false);
@@ -215,7 +215,14 @@ export default function Home() {
                     // TODO: Add this color to theme
                   }}
                 >
-                  <ChatModal chatGroupId={selected} title={selectedTitle} />
+                  <ChatModal
+                    chatGroupId={selected}
+                    title={selectedTitle}
+                    youtubeVideoUrl={
+                      chatGroups[Number(selected) - 1]
+                        ?.youtubeVideoUrl as string
+                    }
+                  />
                 </Box>
               ) : (
                 <Box
