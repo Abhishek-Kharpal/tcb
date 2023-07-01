@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Box, Typography, InputBase, IconButton } from '@mui/material';
-import SendIcon from './sendIcon';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ChatBar from '../chatBar';
 import { Chat } from '../../types';
 interface ChatModalProps {
@@ -107,7 +107,13 @@ const ChatModal = ({ chatGroupId, title }: ChatModalProps) => {
             }}
             placeholder="Type a message"
           />
-          <SendIcon />
+          <IconButton
+            sx={{
+              color: 'secondary.contrastText',
+            }}
+          >
+            <ArrowForwardIcon />
+          </IconButton>
         </Box>
       </Box>
     </Box>
