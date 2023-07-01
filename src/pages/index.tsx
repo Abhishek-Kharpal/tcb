@@ -3,18 +3,35 @@ import { Box, Typography, Avatar, Divider, InputBase, IconButton } from '@mui/ma
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import { ThemeProvider } from '@mui/material/styles';
-import ChatTitle from '../components/chatTitle';
+import { Chat, ChatGroup } from '../types';
+import ChatData from '../components/chatData';
 import styles from './index.module.css';
 import Head from 'next/head';
 import theme from '../theme';
 
 // TODO: Add a loading skeleton for chats
 export default function Home() {
-  const [chats, setChats] = useState([]);
-  const [selected, setSelected] = useState(null);
+  const [chats, setChats] = useState<Chat[]>([]);
+  const [selected, setSelected] = useState<String | null>(null);
 
   useEffect(() => {
     // Call API to fetch chats
+    setChats([
+      {
+        chatId: '1',
+        name: 'Chat 1',
+        lastMessage: 'Last Message',
+        lastMessageTime: '10:00 AM',
+        isMe: false,
+        chatGroupId: '1',
+      },
+      {
+        chatId: '2',
+        name: 'Chat 2',
+        isMe: false,
+        chatGroupId: '1',
+      },
+    ]);
   }, []);
 
   return (
@@ -122,6 +139,9 @@ export default function Home() {
                   <IconButton
                     sx={{
                       color: 'primary.contrastText',
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                      padding: '0',
                     }}
                   >
                     <AddIcon />
@@ -129,6 +149,22 @@ export default function Home() {
                 </Box>
 
                 {/* Chat History */}
+
+                <Box
+                  sx={{
+                    height: 'calc(100% - 144px)',
+                    overflow: 'auto',
+                  }}
+                >
+                  {chats.map((chat: Chat) => (
+                    <ChatData
+                      key={chat.chatId}
+                      chat={chat}
+                      selected={selected === chat.chatId}
+                      onClick={() => setSelected(chat.chatId)}
+                    />
+                  ))}
+                </Box>
               </Box>
               {/* ChatPanel */}
               {selected ? (
@@ -142,12 +178,11 @@ export default function Home() {
                     justifyContent: 'center',
                     alignItems: 'center',
                     borderRadius: '8px',
-                    bgcolor: 'secondary.main',
                   }}
                   className="basic-padding basic-margin"
                 >
                   {/* TODO: Make it responsive */}
-                  <Typography variant="h4" textTransform="none">
+                  <Typography variant="h5" textTransform="none">
                     Select a chat to start
                   </Typography>
                 </Box>

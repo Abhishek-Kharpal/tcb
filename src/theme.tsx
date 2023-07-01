@@ -1,12 +1,11 @@
-import {createTheme} from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import '@fontsource/poppins/400.css';
-
 
 const theme = createTheme({
   palette: {
     primary: {
       main: '#20232b',
-      light: '#f3fc8a',
+      light: '#b785f5',
       contrastText: '#767981',
     },
     secondary: {
