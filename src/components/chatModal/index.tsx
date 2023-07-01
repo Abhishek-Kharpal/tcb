@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { Box, Typography, InputBase, IconButton } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ChatBar from '../chatBar';
-import { Chat } from '../../types';
+import { type Chat } from '../../types';
+
 interface ChatModalProps {
   chatGroupId: string;
   title: string;
@@ -10,6 +11,19 @@ interface ChatModalProps {
 
 const ChatModal = ({ chatGroupId, title }: ChatModalProps) => {
   const [chats, setChats] = useState<Chat[]>([]);
+
+  const sendChatHandler = (chatInputValue: string) => {
+    // TODO: send chat, get response, and update chats
+    setChats((prevChats) => [
+      ...prevChats,
+      {
+        chatId: String(prevChats.length + 1),
+        chatGroupId: '1',
+        data: chatInputValue,
+        isMe: true,
+      },
+    ]);
+  };
 
   useEffect(() => {
     // Call API to fetch chats of specific chat group
@@ -80,42 +94,54 @@ const ChatModal = ({ chatGroupId, title }: ChatModalProps) => {
         ))}
       </Box>
       {/* Space for input */}
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          const formElement = e.currentTarget as HTMLFormElement;
+          const chatInput = formElement.chatInput as HTMLInputElement;
+          sendChatHandler(chatInput.value);
+          chatInput.value = '';
         }}
-        className="basic-padding"
       >
         <Box
           sx={{
-            flexGrow: 1,
-            bgcolor: 'secondary.main',
-            color: 'secondary.contrastText',
-            borderRadius: '8px',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
           }}
           className="basic-padding"
         >
-          <InputBase
+          <Box
             sx={{
               flexGrow: 1,
               bgcolor: 'secondary.main',
               color: 'secondary.contrastText',
+              borderRadius: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
             }}
-            placeholder="Type a message"
-          />
-          <IconButton
-            sx={{
-              color: 'secondary.contrastText',
-            }}
+            className="basic-padding"
           >
-            <ArrowForwardIcon />
-          </IconButton>
+            <InputBase
+              sx={{
+                flexGrow: 1,
+                bgcolor: 'secondary.main',
+                color: 'secondary.contrastText',
+              }}
+              placeholder="Type a message"
+              name="chatInput"
+            />
+            <IconButton
+              sx={{
+                color: 'secondary.contrastText',
+              }}
+              type="submit"
+            >
+              <ArrowForwardIcon />
+            </IconButton>
+          </Box>
         </Box>
-      </Box>
+      </form>
     </Box>
   );
 };
