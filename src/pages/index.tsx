@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import {
   Box,
   Typography,
@@ -18,6 +18,7 @@ import theme from '../theme';
 import { getAllChatGroups, setAllChatGroups } from '~/utils/chatGroupUtils';
 import YoutubeLinkDialog from '~/components/YoutubeLinkDialog';
 import { getVideoInfo } from '~/utils/youtubeUtils';
+import { ErrorContext } from '~/contexts/errorContext';
 
 // TODO: Add a loading skeleton for chats
 // TODO: Scrollbars are not that good looking
@@ -26,6 +27,8 @@ export default function Home() {
   const [selected, setSelected] = useState<string | null>(null);
   const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
   const [youtubeDialogOpen, setYoutubeDialogOpen] = useState<boolean>(false);
+
+  const { setError } = useContext(ErrorContext);
 
   useEffect(() => {
     const chatGroups = getAllChatGroups();
@@ -46,7 +49,9 @@ export default function Home() {
         }}
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={async (url: string) => {
-          const videoInfo = await getVideoInfo(url);
+          const videoInfo = await getVideoInfo(url, setError);
+
+          if (!videoInfo) return;
 
           setChatGroups((prevChatGroups) => {
             const newChatGroup = {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { Box, Typography, InputBase, IconButton } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ChatBar from '../chatBar';
@@ -9,6 +9,7 @@ import {
   getChatResponse,
   setAllChats as saveAllChats,
 } from '~/utils/chatUtils';
+import { ErrorContext } from '~/contexts/errorContext';
 
 interface ChatModalProps {
   chatGroupId: string;
@@ -19,15 +20,18 @@ interface ChatModalProps {
 const ChatModal = ({ chatGroupId, title, youtubeVideoUrl }: ChatModalProps) => {
   const [chats, setChats] = useState<Chat[]>([]);
 
+  const { setError } = useContext(ErrorContext);
+
   const sendChatHandler = async (chatInputValue: string) => {
+    if (chatInputValue.trim() === '') return;
     setChats((prevChats) => {
       const newChats = [
         ...prevChats,
         {
           chatId: String(prevChats.length + 1),
           chatGroupId: '1',
-          data: response,
-          isMe: false,
+          data: chatInputValue,
+          isMe: true,
         },
       ];
       saveAllChats(chatGroupId, newChats);
@@ -37,8 +41,12 @@ const ChatModal = ({ chatGroupId, title, youtubeVideoUrl }: ChatModalProps) => {
     const response = await getChatResponse(
       chatInputValue,
       chatGroupId,
-      console.error,
+      setError,
     );
+
+    if (!response) {
+      return;
+    }
 
     setChats((prevChats) => {
       const newChats = [
@@ -60,7 +68,7 @@ const ChatModal = ({ chatGroupId, title, youtubeVideoUrl }: ChatModalProps) => {
     setChats(chats);
     return () => {
       if (chats.length === 0) {
-        createInitialChatMessage(youtubeVideoUrl)
+        createInitialChatMessage(youtubeVideoUrl, setError)
           .then(sendChatHandler)
           .catch(console.error);
       }

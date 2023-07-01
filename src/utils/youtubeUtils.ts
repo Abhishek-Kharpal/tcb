@@ -54,20 +54,30 @@ export async function getTranscriptOfYoutubeVideo(
 
 export async function getVideoInfo(
   youtubeVideoURI: string,
-): Promise<VideoInfo> {
-  const response = await fetch('/api/video-info', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      youtubeVideoId: getYoutubeVideoId(youtubeVideoURI),
-    }),
-  });
+  errorHandler: (errorMessage: string) => any,
+): Promise<VideoInfo | null> {
+  try {
+    const response = await fetch('/api/video-info', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        youtubeVideoId: getYoutubeVideoId(youtubeVideoURI),
+      }),
+    });
 
-  if (!response.ok) {
-    throw new SayVidError(INFO_FAIL_ERROR_MESSAGE);
+    if (!response.ok) {
+      throw new SayVidError(INFO_FAIL_ERROR_MESSAGE);
+    }
+
+    return (await response.json()) as VideoInfo;
+  } catch (error) {
+    errorHandler(
+      error instanceof SayVidError
+        ? error.message
+        : 'Something went wrong. Please try again later.',
+    );
+    return null;
   }
-
-  return (await response.json()) as VideoInfo;
 }

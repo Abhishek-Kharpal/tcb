@@ -2,21 +2,42 @@ import { INITIAL_PROMPT_WITH_FOLLOWING_TRANSCRIPT } from '~/constants/text';
 import { getFromStorage, setInStorage } from './storageUtils';
 import { getTranscriptOfYoutubeVideo } from './youtubeUtils';
 import { type Chat } from '~/types';
+import getCompletion from './openAi';
+import { SayVidError } from '~/errors';
 
 export async function createInitialChatMessage(
   youtubeVideoURI: string,
+  errorHandler: (errorMessage: string) => any,
 ): Promise<string> {
-  return `${INITIAL_PROMPT_WITH_FOLLOWING_TRANSCRIPT}
-
-${await getTranscriptOfYoutubeVideo(youtubeVideoURI)}`;
+  try {
+    return `${INITIAL_PROMPT_WITH_FOLLOWING_TRANSCRIPT}\n\n${await getTranscriptOfYoutubeVideo(
+      youtubeVideoURI,
+    )}`;
+  } catch (error) {
+    errorHandler(
+      error instanceof SayVidError
+        ? error.message
+        : 'Something went wrong. Please try again later.',
+    );
+    return '';
+  }
 }
 
 export const getChatResponse = async (
   message: string,
   chatGroupId: string,
   errorHandler: (errorMessage: string) => any,
-): Promise<string> => {
-  return 'yo';
+): Promise<string | null> => {
+  try {
+    return await getCompletion(message);
+  } catch (error) {
+    errorHandler(
+      error instanceof SayVidError
+        ? error.message
+        : 'Something went wrong. Please try again later.',
+    );
+    return null;
+  }
 };
 
 export const getAllChats = (chatGroupId: string): Chat[] => {
