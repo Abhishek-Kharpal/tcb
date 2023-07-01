@@ -5,14 +5,16 @@ import AddIcon from '@mui/icons-material/Add';
 import { ThemeProvider } from '@mui/material/styles';
 import { Chat, ChatGroup } from '../types';
 import ChatData from '../components/chatData';
-import styles from './index.module.css';
+import ChatModal from '../components/chatModal';
 import Head from 'next/head';
 import theme from '../theme';
 
 // TODO: Add a loading skeleton for chats
+// TODO: Scrollbars are not that good looking
 export default function Home() {
   const [chats, setChats] = useState<ChatGroup[]>([]);
-  const [selected, setSelected] = useState<String | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
+  const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
 
   useEffect(() => {
     // Call API to fetch chats
@@ -29,6 +31,11 @@ export default function Home() {
       },
     ]);
   }, []);
+
+  const handleSelectChat = (chatGroupId: string, title: string) => {
+    setSelected(chatGroupId);
+    setSelectedTitle(title);
+  };
 
   return (
     <>
@@ -144,7 +151,7 @@ export default function Home() {
                   </IconButton>
                 </Box>
 
-                {/* Chat History */}
+                {/* Chat Group History */}
 
                 <Box
                   sx={{
@@ -157,14 +164,28 @@ export default function Home() {
                       key={chat.chatGroupId}
                       chat={chat}
                       selected={selected === chat.chatGroupId}
-                      onClick={() => setSelected(chat.chatGroupId)}
+                      onClick={() => handleSelectChat(chat.chatGroupId, chat.title)}
                     />
                   ))}
                 </Box>
               </Box>
               {/* ChatPanel */}
-              {selected ? (
-                <></>
+              {selected && selectedTitle ? (
+                <Box
+                  sx={{
+                    width: 'calc(100% - 300px)',
+                    height: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: '8px',
+                    ml: '32px',
+                    bgcolor: '#1d1e24',
+                    // TODO: Add this color to theme
+                  }}
+                >
+                  <ChatModal chatGroupId={selected} title={selectedTitle} />
+                </Box>
               ) : (
                 <Box
                   sx={{
