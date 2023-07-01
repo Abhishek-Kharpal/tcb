@@ -5,14 +5,14 @@ import AddIcon from '@mui/icons-material/Add';
 import { ThemeProvider } from '@mui/material/styles';
 import { Chat, ChatGroup } from '../types';
 import ChatData from '../components/chatData';
-import styles from './index.module.css';
+import ChatModal from '../components/chatModal';
 import Head from 'next/head';
 import theme from '../theme';
 
 // TODO: Add a loading skeleton for chats
 export default function Home() {
   const [chats, setChats] = useState<ChatGroup[]>([]);
-  const [selected, setSelected] = useState<String | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
 
   useEffect(() => {
     // Call API to fetch chats
@@ -164,7 +164,19 @@ export default function Home() {
               </Box>
               {/* ChatPanel */}
               {selected ? (
-                <></>
+                <Box
+                  sx={{
+                    width: 'calc(100% - 300px)',
+                    height: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: '8px',
+                  }}
+                  className="basic-padding basic-margin"
+                >
+                  <ChatModal chatGroupId={selected} />
+                </Box>
               ) : (
                 <Box
                   sx={{
