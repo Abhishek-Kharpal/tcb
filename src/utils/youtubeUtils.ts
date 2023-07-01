@@ -23,7 +23,9 @@ export function getYoutubeVideoId(youtubeVideoURI: string) {
   }
 }
 
-export async function getTranscriptOfYoutubeVideo(youtubeVideoURI: string) {
+export async function getTranscriptOfYoutubeVideo(
+  youtubeVideoURI: string,
+): Promise<string> {
   try {
     const response = await fetch('/api/transcript', {
       method: 'POST',
