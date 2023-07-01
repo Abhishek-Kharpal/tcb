@@ -1,8 +1,8 @@
 import { Box, Typography } from '@mui/material';
-import { Chat } from '../../types';
+import { ChatGroup } from '../../types';
 
 interface ChatDataProps {
-  chat: Chat;
+  chat: ChatGroup;
   selected: boolean;
   onClick: () => void;
 }
@@ -35,7 +35,7 @@ const ChatData = ({ chat, selected, onClick }: ChatDataProps) => {
             fontWeight: 'bold',
           }}
         >
-          <Typography variant="subtitle1">{chat.name}</Typography>
+          <Typography variant="subtitle1">{chat.title}</Typography>
         </Box>
         <Box
           sx={{

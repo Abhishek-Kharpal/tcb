@@ -11,25 +11,21 @@ import theme from '../theme';
 
 // TODO: Add a loading skeleton for chats
 export default function Home() {
-  const [chats, setChats] = useState<Chat[]>([]);
+  const [chats, setChats] = useState<ChatGroup[]>([]);
   const [selected, setSelected] = useState<String | null>(null);
 
   useEffect(() => {
     // Call API to fetch chats
     setChats([
       {
-        chatId: '1',
-        name: 'Chat 1',
+        chatGroupId: '1',
+        title: 'Chat 1',
         lastMessage: 'Last Message',
         lastMessageTime: '10:00 AM',
-        isMe: false,
-        chatGroupId: '1',
       },
       {
-        chatId: '2',
-        name: 'Chat 2',
-        isMe: false,
-        chatGroupId: '1',
+        title: 'Chat 2',
+        chatGroupId: '2',
       },
     ]);
   }, []);
@@ -141,7 +137,7 @@ export default function Home() {
                       color: 'primary.contrastText',
                       display: 'flex',
                       justifyContent: 'flex-end',
-                      padding: '0',
+                      padding: '0px',
                     }}
                   >
                     <AddIcon />
@@ -156,12 +152,12 @@ export default function Home() {
                     overflow: 'auto',
                   }}
                 >
-                  {chats.map((chat: Chat) => (
+                  {chats.map((chat: ChatGroup) => (
                     <ChatData
-                      key={chat.chatId}
+                      key={chat.chatGroupId}
                       chat={chat}
-                      selected={selected === chat.chatId}
-                      onClick={() => setSelected(chat.chatId)}
+                      selected={selected === chat.chatGroupId}
+                      onClick={() => setSelected(chat.chatGroupId)}
                     />
                   ))}
                 </Box>

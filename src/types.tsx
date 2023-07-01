@@ -1,8 +1,6 @@
 export interface Chat {
   chatId: string;
-  name: string;
-  lastMessage?: string;
-  lastMessageTime?: string;
+  data: string;
   isMe: boolean;
   chatGroupId: string;
 }
@@ -10,4 +8,6 @@ export interface Chat {
 export interface ChatGroup {
   chatGroupId: string;
   title: string;
+  lastMessage?: string;
+  lastMessageTime?: string;
 }
