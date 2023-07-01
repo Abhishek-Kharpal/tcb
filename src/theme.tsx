@@ -3,6 +3,7 @@ import '@fontsource/poppins/400.css';
 
 const theme = createTheme({
   palette: {
+    mode: 'dark',
     primary: {
       main: '#20232b',
       light: '#b785f5',
