@@ -2,6 +2,16 @@ import { Configuration, OpenAIApi } from 'openai';
 import { SayVidError } from '~/errors';
 import { getFromStorage } from './storageUtils';
 
+interface APIErrorResponse {
+  response: {
+    data: {
+      error: {
+        message: string;
+      };
+    };
+  };
+}
+
 let openai: OpenAIApi | null = null;
 const getOpenAiInstance = () => {
   if (!openai) {
@@ -27,8 +37,9 @@ export default async function getCompletion(prompt: string): Promise<string> {
     );
   } catch (error: any) {
     console.error(error);
-    if (error?.response) {
-      throw new SayVidError(error.response?.data?.error?.message);
+    const errorResponse = (error as APIErrorResponse).response;
+    if (errorResponse) {
+      throw new SayVidError(errorResponse?.data?.error?.message);
     }
     throw error;
   }
