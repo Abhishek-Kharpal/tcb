@@ -25,7 +25,13 @@ const ChatBar = ({ chat }: ChatBarProps) => {
           flexGrow: 1,
         }}
       >
-        <Typography variant="body1">{chat.data}</Typography>
+        <Typography variant="body1">
+          <span
+            dangerouslySetInnerHTML={{
+              __html: chat.data.replaceAll('\n', '<br />'),
+            }}
+          />
+        </Typography>
       </Box>
     </Box>
   );

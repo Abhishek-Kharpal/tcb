@@ -8,13 +8,13 @@ const openai = new OpenAIApi(configuration);
 
 export default async function getCompletion(prompt: string): Promise<string> {
   try {
-    const completion = await openai.createCompletion({
-      model: 'text-davinci-003',
-      prompt,
+    const completion = await openai.createChatCompletion({
+      model: 'gpt-3.5-turbo',
+      messages: [{ role: 'user', content: prompt }],
     });
 
     return (
-      completion.data.choices[0]?.text ??
+      completion.data.choices[0]?.message?.content ??
       'sorry, Could not do it, can you try again later ?'
     );
   } catch (error: any) {
@@ -22,5 +22,6 @@ export default async function getCompletion(prompt: string): Promise<string> {
     if (error?.response) {
       throw new SayVidError(error.response?.data?.error?.message);
     }
+    throw error;
   }
 }
