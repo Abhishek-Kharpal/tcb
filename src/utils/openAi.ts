@@ -1,13 +1,21 @@
 import { Configuration, OpenAIApi } from 'openai';
 import { SayVidError } from '~/errors';
+import { getFromStorage } from './storageUtils';
 
-const configuration = new Configuration({
-  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
+let openai: OpenAIApi | null = null;
+const getOpenAiInstance = () => {
+  if (!openai) {
+    const configuration = new Configuration({
+      apiKey: getFromStorage('openAI_API_Key') ?? '',
+    });
+    openai = new OpenAIApi(configuration);
+  }
+  return openai;
+};
 
 export default async function getCompletion(prompt: string): Promise<string> {
   try {
+    const openai = getOpenAiInstance();
     const completion = await openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
       messages: [{ role: 'user', content: prompt }],
