@@ -32,7 +32,7 @@ export default function YoutubeLinkDialog({
           color: 'secondary.contrastText',
         },
         '& .MuiInput-root': {
-          color: 'secondary.contrastText',
+          color: 'secondary.contrastText !important',
         },
         '& .MuiTypography-root': {
           backgroundColor: 'primary.main',
