@@ -36,17 +36,16 @@ export const getChatResponse = async (
   chatGroupId: string,
   errorHandler: (errorMessage: string) => any,
 ): Promise<string | null> => {
-  return await getMessageAfter5Seconds('yo');
-  // try {
-  //   return await getCompletion(message);
-  // } catch (error) {
-  //   errorHandler(
-  //     error instanceof SayVidError
-  //       ? error.message
-  //       : 'Something went wrong. Please try again later.',
-  //   );
-  //   return null;
-  // }
+  try {
+    return await getCompletion(message);
+  } catch (error) {
+    errorHandler(
+      error instanceof SayVidError
+        ? error.message
+        : 'Something went wrong. Please try again later.',
+    );
+    return null;
+  }
 };
 
 export const getAllChats = (chatGroupId: string): Chat[] => {
