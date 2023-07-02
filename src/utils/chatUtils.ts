@@ -23,21 +23,30 @@ export async function createInitialChatMessage(
   }
 }
 
+export const getMessageAfter5Seconds = (message: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(message);
+    }, 5000);
+  });
+};
+
 export const getChatResponse = async (
   message: string,
   chatGroupId: string,
   errorHandler: (errorMessage: string) => any,
 ): Promise<string | null> => {
-  try {
-    return await getCompletion(message);
-  } catch (error) {
-    errorHandler(
-      error instanceof SayVidError
-        ? error.message
-        : 'Something went wrong. Please try again later.',
-    );
-    return null;
-  }
+  return await getMessageAfter5Seconds('yo');
+  // try {
+  //   return await getCompletion(message);
+  // } catch (error) {
+  //   errorHandler(
+  //     error instanceof SayVidError
+  //       ? error.message
+  //       : 'Something went wrong. Please try again later.',
+  //   );
+  //   return null;
+  // }
 };
 
 export const getAllChats = (chatGroupId: string): Chat[] => {
