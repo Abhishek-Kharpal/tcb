@@ -21,6 +21,9 @@ import YoutubeLinkDialog from '~/components/YoutubeLinkDialog';
 import { getVideoInfo } from '~/utils/youtubeUtils';
 import { ErrorContext } from '~/contexts/errorContext';
 
+import sayvidLogo from '../assets/Sayvid.png';
+import Image from 'next/image';
+
 // TODO: Add a loading skeleton for chats
 // TODO: Scrollbars are not that good looking
 export default function Home() {
@@ -113,9 +116,7 @@ export default function Home() {
             className="basic-padding"
           >
             {/* TODO: Change LOGO */}
-            <Typography variant="h4" textTransform="none">
-              Logo
-            </Typography>
+            <Image src={sayvidLogo} height={64} alt={'SayVid Logo'} />
 
             <Avatar
               sx={{
