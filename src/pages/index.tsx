@@ -41,7 +41,7 @@ export default function Home() {
   };
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <YoutubeLinkDialog
         open={youtubeDialogOpen}
         onCancel={() => {
@@ -76,181 +76,178 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <ThemeProvider theme={theme}>
+        <Box
+          sx={{
+            bgcolor: 'primary.main',
+            color: 'primary.contrastText',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+          }}
+        >
+          {/* Space for header */}
           <Box
             sx={{
-              bgcolor: 'primary.main',
-              color: 'primary.contrastText',
+              height: '72px',
               display: 'flex',
-              flexDirection: 'column',
               justifyContent: 'space-between',
+              alignItems: 'center',
             }}
+            className="basic-padding"
           >
-            {/* Space for header */}
-            <Box
-              sx={{
-                height: '72px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-              className="basic-padding"
-            >
-              {/* TODO: Change LOGO */}
-              <Typography variant="h4" textTransform="none">
-                Logo
-              </Typography>
+            {/* TODO: Change LOGO */}
+            <Typography variant="h4" textTransform="none">
+              Logo
+            </Typography>
 
-              <Avatar
-                sx={{
-                  bgcolor: 'secondary.light',
-                  color: 'primary.contrastText',
-                  cursor: 'pointer',
-                }}
-              />
-            </Box>
-            <Divider
+            <Avatar
               sx={{
-                bgcolor: 'primary.contrastText',
+                bgcolor: 'secondary.light',
+                color: 'primary.contrastText',
+                cursor: 'pointer',
               }}
             />
-            {/* Space for content */}
+          </Box>
+          <Divider
+            sx={{
+              bgcolor: 'primary.contrastText',
+            }}
+          />
+          {/* Space for content */}
+          <Box
+            sx={{
+              height: 'calc(100vh - 72px)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+            className="basic-padding"
+          >
+            {/* SidePanel */}
             <Box
               sx={{
-                height: 'calc(100vh - 72px)',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
+                width: '300px',
+                height: '100%',
               }}
-              className="basic-padding"
             >
-              {/* SidePanel */}
+              {/* SearchBar */}
               <Box
                 sx={{
-                  width: '300px',
-                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  bgcolor: 'secondary.main',
+                  borderRadius: '8px',
+                  padding: '0 8px',
                 }}
               >
-                {/* SearchBar */}
-                <Box
+                <SearchIcon />
+                <InputBase
                   sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    bgcolor: 'secondary.main',
-                    borderRadius: '8px',
-                    padding: '0 8px',
+                    color: 'primary.contrastText',
+                    marginLeft: '8px',
+                    height: '36px',
                   }}
-                >
-                  <SearchIcon />
-                  <InputBase
-                    sx={{
-                      color: 'primary.contrastText',
-                      marginLeft: '8px',
-                      height: '36px',
-                    }}
-                    placeholder="Search"
-                  />
-                </Box>
-                {/* New Chat */}
-
-                <Box
-                  sx={{
-                    height: '72px',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                  className="basic-padding"
-                >
-                  <Typography
-                    sx={{
-                      color: 'primary.contrastText',
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    Chat
-                  </Typography>
-                  <IconButton
-                    sx={{
-                      color: 'primary.contrastText',
-                      display: 'flex',
-                      justifyContent: 'flex-end',
-                      padding: '0px',
-                    }}
-                    onClick={() => {
-                      setYoutubeDialogOpen(true);
-                    }}
-                  >
-                    <AddIcon />
-                  </IconButton>
-                </Box>
-
-                {/* Chat Group History */}
-
-                <Box
-                  sx={{
-                    height: 'calc(100% - 144px)',
-                    overflow: 'auto',
-                  }}
-                >
-                  {chatGroups.map((chat: ChatGroup) => (
-                    <ChatData
-                      key={chat.chatGroupId}
-                      chat={chat}
-                      selected={selected === chat.chatGroupId}
-                      onClick={() =>
-                        handleSelectChat(chat.chatGroupId, chat.title)
-                      }
-                    />
-                  ))}
-                </Box>
+                  placeholder="Search"
+                />
               </Box>
-              {/* ChatPanel */}
-              {selected && selectedTitle ? (
-                <Box
+              {/* New Chat */}
+
+              <Box
+                sx={{
+                  height: '72px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+                className="basic-padding"
+              >
+                <Typography
                   sx={{
-                    width: 'calc(100% - 300px)',
-                    height: '100%',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderRadius: '8px',
-                    ml: '32px',
-                    bgcolor: '#1d1e24',
-                    // TODO: Add this color to theme
+                    color: 'primary.contrastText',
+                    fontWeight: 'bold',
                   }}
                 >
-                  <ChatModal
-                    chatGroupId={selected}
-                    title={selectedTitle}
-                    youtubeVideoUrl={
-                      chatGroups[Number(selected) - 1]
-                        ?.youtubeVideoUrl as string
+                  Chat
+                </Typography>
+                <IconButton
+                  sx={{
+                    color: 'primary.contrastText',
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    padding: '0px',
+                  }}
+                  onClick={() => {
+                    setYoutubeDialogOpen(true);
+                  }}
+                >
+                  <AddIcon />
+                </IconButton>
+              </Box>
+
+              {/* Chat Group History */}
+
+              <Box
+                sx={{
+                  height: 'calc(100% - 144px)',
+                  overflow: 'auto',
+                }}
+              >
+                {chatGroups.map((chat: ChatGroup) => (
+                  <ChatData
+                    key={chat.chatGroupId}
+                    chat={chat}
+                    selected={selected === chat.chatGroupId}
+                    onClick={() =>
+                      handleSelectChat(chat.chatGroupId, chat.title)
                     }
                   />
-                </Box>
-              ) : (
-                <Box
-                  sx={{
-                    width: 'calc(100% - 300px)',
-                    height: '100%',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderRadius: '8px',
-                  }}
-                  className="basic-padding basic-margin"
-                >
-                  {/* TODO: Make it responsive */}
-                  <Typography variant="h5" textTransform="none">
-                    Select a chat to start
-                  </Typography>
-                </Box>
-              )}
+                ))}
+              </Box>
             </Box>
+            {/* ChatPanel */}
+            {selected && selectedTitle ? (
+              <Box
+                sx={{
+                  width: 'calc(100% - 300px)',
+                  height: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: '8px',
+                  ml: '32px',
+                  bgcolor: '#1d1e24',
+                  // TODO: Add this color to theme
+                }}
+              >
+                <ChatModal
+                  chatGroupId={selected}
+                  title={selectedTitle}
+                  youtubeVideoUrl={
+                    chatGroups[Number(selected) - 1]?.youtubeVideoUrl as string
+                  }
+                />
+              </Box>
+            ) : (
+              <Box
+                sx={{
+                  width: 'calc(100% - 300px)',
+                  height: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: '8px',
+                }}
+                className="basic-padding basic-margin"
+              >
+                {/* TODO: Make it responsive */}
+                <Typography variant="h5" textTransform="none">
+                  Select a chat to start
+                </Typography>
+              </Box>
+            )}
           </Box>
-        </ThemeProvider>
+        </Box>
       </main>
-    </>
+    </ThemeProvider>
   );
 }

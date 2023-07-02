@@ -21,7 +21,27 @@ export default function YoutubeLinkDialog({
   onCancel,
 }: YoutubeLinkDialogProps) {
   return (
-    <Dialog open={open} onClose={onCancel}>
+    <Dialog
+      open={open}
+      onClose={onCancel}
+      sx={{
+        '& .MuiButton-root': {
+          color: 'secondary.contrastText',
+        },
+        '& .MuiInputLabel-root': {
+          color: 'secondary.contrastText',
+        },
+        '& .MuiTypography-root': {
+          backgroundColor: 'primary.main',
+        },
+        '& .MuiDialogContent-root': {
+          backgroundColor: 'primary.main',
+        },
+        '& .MuiDialogActions-root': {
+          bgcolor: 'secondary.main',
+        },
+      }}
+    >
       <form
         onSubmit={(e) => {
           e.preventDefault();
