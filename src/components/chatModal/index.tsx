@@ -10,6 +10,7 @@ import {
   setAllChats as saveAllChats,
 } from '~/utils/chatUtils';
 import { ErrorContext } from '~/contexts/errorContext';
+import { getFromStorage, setInStorage } from '~/utils/storageUtils';
 
 interface ChatModalProps {
   chatGroupId: string;
@@ -66,13 +67,15 @@ const ChatModal = ({ chatGroupId, title, youtubeVideoUrl }: ChatModalProps) => {
   useEffect(() => {
     const chats = getAllChats(chatGroupId);
     setChats(chats);
-    return () => {
-      if (chats.length === 0) {
-        createInitialChatMessage(youtubeVideoUrl, setError)
-          .then(sendChatHandler)
-          .catch(console.error);
-      }
-    };
+    if (
+      chats.length === 0 &&
+      getFromStorage(`${chatGroupId}_initial_message_created`) !== 'true'
+    ) {
+      setInStorage(`${chatGroupId}_initial_message_created`, 'true');
+      createInitialChatMessage(youtubeVideoUrl, setError)
+        .then(sendChatHandler)
+        .catch(console.error);
+    }
   }, [chatGroupId]);
 
   return (

@@ -20,7 +20,6 @@ export default async function getYoutubeTranscripts(
   }
 
   try {
-    console.log(req.body);
     await bodySchema.validateAsync(req.body);
   } catch (error: any) {
     const { message } = error as { message: string };
