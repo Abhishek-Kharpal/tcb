@@ -1,5 +1,11 @@
 import { useEffect, useState, useContext } from 'react';
-import { Box, Typography, InputBase, IconButton } from '@mui/material';
+import {
+  Box,
+  Typography,
+  InputBase,
+  IconButton,
+  LinearProgress,
+} from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ChatBar from '../chatBar';
 import { type Chat } from '../../types';
@@ -20,6 +26,7 @@ interface ChatModalProps {
 
 const ChatModal = ({ chatGroupId, title, youtubeVideoUrl }: ChatModalProps) => {
   const [chats, setChats] = useState<Chat[]>([]);
+  const [loadChat, setLoadChat] = useState<boolean>(false);
 
   const { setError } = useContext(ErrorContext);
 
@@ -39,11 +46,15 @@ const ChatModal = ({ chatGroupId, title, youtubeVideoUrl }: ChatModalProps) => {
       return newChats;
     });
 
+    setLoadChat(true);
+
     const response = await getChatResponse(
       chatInputValue,
       chatGroupId,
       setError,
     );
+
+    setLoadChat(false);
 
     if (!response) {
       return;
@@ -89,6 +100,16 @@ const ChatModal = ({ chatGroupId, title, youtubeVideoUrl }: ChatModalProps) => {
         flexGrow: 1,
       }}
     >
+      {loadChat && (
+        <LinearProgress
+          sx={{
+            bgcolor: '#20232b',
+            '& .MuiLinearProgress-bar': {
+              backgroundColor: '#b785f5',
+            },
+          }}
+        />
+      )}
       {/* Space for header */}
       <Box
         sx={{

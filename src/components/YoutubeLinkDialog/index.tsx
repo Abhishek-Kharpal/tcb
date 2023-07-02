@@ -31,6 +31,9 @@ export default function YoutubeLinkDialog({
         '& .MuiInputLabel-root': {
           color: 'secondary.contrastText',
         },
+        '& .MuiInput-root': {
+          color: 'secondary.contrastText',
+        },
         '& .MuiTypography-root': {
           backgroundColor: 'primary.main',
         },
