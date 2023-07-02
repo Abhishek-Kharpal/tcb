@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useRef } from 'react';
 import {
   Box,
   Typography,
@@ -27,6 +27,16 @@ interface ChatModalProps {
 const ChatModal = ({ chatGroupId, title, youtubeVideoUrl }: ChatModalProps) => {
   const [chats, setChats] = useState<Chat[]>([]);
   const [loadChat, setLoadChat] = useState<boolean>(false);
+
+  const chatsContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    console.log(chatsContainerRef);
+    if (chatsContainerRef?.current) {
+      chatsContainerRef.current.scrollTop =
+        chatsContainerRef.current.scrollHeight;
+    }
+  }, [chats]);
 
   const { setError } = useContext(ErrorContext);
 
@@ -100,16 +110,6 @@ const ChatModal = ({ chatGroupId, title, youtubeVideoUrl }: ChatModalProps) => {
         flexGrow: 1,
       }}
     >
-      {loadChat && (
-        <LinearProgress
-          sx={{
-            bgcolor: '#20232b',
-            '& .MuiLinearProgress-bar': {
-              backgroundColor: '#b785f5',
-            },
-          }}
-        />
-      )}
       {/* Space for header */}
       <Box
         sx={{
@@ -138,6 +138,7 @@ const ChatModal = ({ chatGroupId, title, youtubeVideoUrl }: ChatModalProps) => {
           overflowY: 'auto',
           padding: '0 16px',
         }}
+        ref={chatsContainerRef}
       >
         {chats.map((chat) => (
           <ChatBar key={chat.chatId} chat={chat} />
@@ -153,6 +154,20 @@ const ChatModal = ({ chatGroupId, title, youtubeVideoUrl }: ChatModalProps) => {
           chatInput.value = '';
         }}
       >
+        {loadChat && (
+          <LinearProgress
+            sx={{
+              bgcolor: '#20232b',
+              '& .MuiLinearProgress-bar': {
+                backgroundColor: '#b785f5',
+              },
+              position: 'relative',
+              bottom: '-20px',
+              margin: '0 20px',
+            }}
+          />
+        )}
+
         <Box
           sx={{
             display: 'flex',
