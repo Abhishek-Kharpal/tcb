@@ -31,7 +31,6 @@ const ChatModal = ({ chatGroupId, title, youtubeVideoUrl }: ChatModalProps) => {
   const chatsContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log(chatsContainerRef);
     if (chatsContainerRef?.current) {
       chatsContainerRef.current.scrollTop =
         chatsContainerRef.current.scrollHeight;
