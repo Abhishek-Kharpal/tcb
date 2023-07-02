@@ -6,6 +6,7 @@ import {
   Divider,
   InputBase,
   IconButton,
+  LinearProgress,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
@@ -27,6 +28,7 @@ export default function Home() {
   const [selected, setSelected] = useState<string | null>(null);
   const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
   const [youtubeDialogOpen, setYoutubeDialogOpen] = useState<boolean>(false);
+  const [loadTranscript, setLoadTranscript] = useState<boolean>(false);
 
   const { setError } = useContext(ErrorContext);
 
@@ -42,6 +44,17 @@ export default function Home() {
 
   return (
     <>
+      {loadTranscript && (
+        <LinearProgress
+          sx={{
+            bgcolor: '#20232b',
+            '& .MuiLinearProgress-bar': {
+              backgroundColor: '#b785f5',
+            },
+          }}
+        />
+      )}
+
       <YoutubeLinkDialog
         open={youtubeDialogOpen}
         onCancel={() => {
@@ -49,9 +62,13 @@ export default function Home() {
         }}
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={async (url: string) => {
+          setLoadTranscript(true);
           const videoInfo = await getVideoInfo(url, setError);
 
-          if (!videoInfo) return;
+          if (!videoInfo) {
+            setLoadTranscript(false);
+            return;
+          }
 
           setChatGroups((prevChatGroups) => {
             const newChatGroup = {
@@ -68,6 +85,7 @@ export default function Home() {
           });
 
           setYoutubeDialogOpen(false);
+          setLoadTranscript(false);
         }}
       />
       <Head>
@@ -151,6 +169,7 @@ export default function Home() {
                     placeholder="Search"
                   />
                 </Box>
+
                 {/* New Chat */}
 
                 <Box
